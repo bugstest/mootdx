@@ -62,9 +62,8 @@ def get_stock_market(symbol='', string=False):
     elif symbol.startswith(('5', '6', '7')):
         market = 'sh'
 
-    elif symbol.startswith(('9', '4', '8')):
-        # 除了900和920开头的，其他9开头的以及4、8开头的都属于北交所
-        # 9开头的：930, 940, 950等属于北交所
+    elif symbol.startswith(('4', '8')):
+        # 4和8开头的属于北交所
         market = 'bj'
 
     # logger.debug(f"market => {market}")
