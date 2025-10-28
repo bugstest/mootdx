@@ -15,32 +15,36 @@ from mootdx.logger import logger
 class MooTdxDailyBarReader(TdxDailyBarReader):
     """感谢 bopomofo 的鼎力支持"""
 
-    SECURITY_TYPE = [
-        'SH_A_STOCK',
-        'SH_B_STOCK',
-        'SH_STAR_STOCK',
-        'SH_INDEX',
-        'SH_FUND',
-        'SH_BOND',
-        'SZ_A_STOCK',
-        'SZ_B_STOCK',
-        'SZ_INDEX',
-        'SZ_FUND',
-        'SZ_BOND',
+    SECURITY_TYPE = [
+        'SH_A_STOCK',
+        'SH_B_STOCK',
+        'SH_STAR_STOCK',
+        'SH_INDEX',
+        'SH_FUND',
+        'SH_BOND',
+        'SZ_A_STOCK',
+        'SZ_B_STOCK',
+        'SZ_INDEX',
+        'SZ_FUND',
+        'SZ_BOND',
+        'BJ_A_STOCK',  # 北交所A股
+        'BJ_INDEX',    # 北交所指数
     ]
 
-    SECURITY_COEFFICIENT = {
-        'SH_A_STOCK': [0.01, 0.01],
-        'SH_B_STOCK': [0.001, 0.01],
-        'SH_STAR_STOCK': [0.01, 0.01],
-        'SH_INDEX': [0.01, 1.0],
-        'SH_FUND': [0.001, 1.0],
-        'SH_BOND': [0.001, 1.0],
-        'SZ_A_STOCK': [0.01, 0.01],
-        'SZ_B_STOCK': [0.01, 0.01],
-        'SZ_INDEX': [0.01, 1.0],
-        'SZ_FUND': [0.001, 0.01],
-        'SZ_BOND': [0.001, 0.01],
+    SECURITY_COEFFICIENT = {
+        'SH_A_STOCK': [0.01, 0.01],
+        'SH_B_STOCK': [0.001, 0.01],
+        'SH_STAR_STOCK': [0.01, 0.01],
+        'SH_INDEX': [0.01, 1.0],
+        'SH_FUND': [0.001, 1.0],
+        'SH_BOND': [0.001, 1.0],
+        'SZ_A_STOCK': [0.01, 0.01],
+        'SZ_B_STOCK': [0.01, 0.01],
+        'SZ_INDEX': [0.01, 1.0],
+        'SZ_FUND': [0.001, 0.01],
+        'SZ_BOND': [0.001, 0.01],
+        'BJ_A_STOCK': [0.01, 0.01],  # 北交所A股系数
+        'BJ_INDEX': [0.01, 1.0],     # 北交所指数系数
     }
 
     def get_security_type(self, fname):
@@ -87,6 +91,15 @@ class MooTdxDailyBarReader(TdxDailyBarReader):
                 return 'SH_BOND'
 
             return 'SH_OTHER'
+
+        # 处理北交所
+        if exchange == 'bj':
+            # 北交所股票代码处理逻辑
+            if code_head in ['43', '83', '87', '92']:  # 包括新的920开头代码
+                return 'BJ_A_STOCK'
+            
+            # 北交所指数等其他类型
+            return 'BJ_A_STOCK'  # 默认为股票类型
 
         logger.error('Unknown security exchange !\n')
         raise NotImplementedError
