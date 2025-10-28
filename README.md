@@ -1,3 +1,6 @@
+原mootdx项目解析北交所本地行情文件异常，fork原项目对其进行增补和修改。
+==================
+
 通达信数据读取接口
 ==================
 
@@ -11,15 +14,14 @@
 **郑重声明: 本项目只作学习交流, 不得用于任何商业目的.**
 
 -   开源协议: MIT license
--   在线文档: <https://www.mootdx.com>
--   国内镜像: <https://gitee.com/ibopo/mootdx>
--   项目仓库: <https://github.com/mootdx/mootdx>
--   问题交流: <https://github.com/mootdx/mootdx/issues>
+-   原项目的在线文档: <https://www.mootdx.com>
+-   原作者项目仓库: <https://github.com/mootdx/mootdx>
+-   原项目的问题交流: <https://github.com/mootdx/mootdx/issues>
 
 版本更新(倒序)
 --------------
 
-版本更新日志: <https://mootdx.readthedocs.io/zh_CN/latest/history/>
+原项目的版本更新日志: <https://mootdx.readthedocs.io/zh_CN/latest/history/>
 
 运行环境
 --------
@@ -111,18 +113,8 @@ Affair.fetch(downdir='tmp', filename='gpcw19960630.zip')
 Affair.parse(downdir='tmp')
 ```
 
-加微信交流
-----------
-
-![](docs/img/IMG_2851.JPG)
-
 常见问题
 --------
 
 M1 mac 系统PyMiniRacer不能使用，访问:
 <https://github.com/sqreen/PyMiniRacer/issues/143>
-
-
-## Stargazers over time
-
-[![Stargazers over time](https://starchart.cc/mootdx/mootdx.svg)](https://starchart.cc/mootdx/mootdx)
