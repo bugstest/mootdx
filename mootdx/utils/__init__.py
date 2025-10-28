@@ -45,16 +45,20 @@ def get_stock_market(symbol='', string=False):
     if symbol.startswith(('sh', 'sz', 'SH', 'SZ')):
         market = symbol[:2].lower()
 
+    # 优先处理北交所新代码段920开头的股票
+    elif symbol.startswith('920'):
+        market = 'bj'
+
     elif symbol.startswith(('50', '51', '60', '68', '90', '110', '113', '132', '204')):
         market = 'sh'
 
     elif symbol.startswith(('00', '12', '13', '18', '15', '16', '18', '20', '30', '39', '115', '1318')):
         market = 'sz'
 
-    elif symbol.startswith(('5', '6', '9', '7')):
+    elif symbol.startswith(('5', '6', '7')):
         market = 'sh'
 
-    elif symbol.startswith(('4', '8')):
+    elif symbol.startswith(('9', '4', '8')):
         market = 'bj'
 
     # logger.debug(f"market => {market}")
