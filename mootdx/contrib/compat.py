@@ -43,8 +43,10 @@ class MooTdxDailyBarReader(TdxDailyBarReader):
         'SZ_INDEX': [0.01, 1.0],
         'SZ_FUND': [0.001, 0.01],
         'SZ_BOND': [0.001, 0.01],
-        'BJ_A_STOCK': [0.01, 0.01],  # 北交所A股系数
-        'BJ_INDEX': [0.01, 1.0],     # 北交所指数系数
+        'BJ_A_STOCK': [0.01, 0.01],  # 北交所A股系数 这个待确定啊
+        
+        'BJ_BOND':[0,0],   # 债券还没有验证
+        'BJ_INDEX': [0.01, 1.0],     # 北交所指数系数 这个待确定啊
     }
 
     def get_security_type(self, fname):
@@ -95,11 +97,17 @@ class MooTdxDailyBarReader(TdxDailyBarReader):
         # 处理北交所
         if exchange == 'bj':
             # 北交所股票代码处理逻辑
-            if code_head in ['43', '83', '87', '92']:  # 包括新的920开头代码
+            if code_head in ['43', '83', '87', '92']:  # 920开头为北交所股票
                 return 'BJ_A_STOCK'
-            
+
+            if code_head in ['82']:  # 820开头为北交所债券
+                return 'BJ_BOND'
+                
+            if code_head in ['89']:  # 899开头为北交所指数
+                return 'BJ_INDEX'   
+                
             # 北交所指数等其他类型
-            return 'BJ_A_STOCK'  # 默认为股票类型
+            return 'BJ_OTHER'  
 
         logger.error('Unknown security exchange !\n')
         raise NotImplementedError

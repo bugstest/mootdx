@@ -29,20 +29,20 @@ def get_stock_markets(symbols=None):
 def get_stock_market(symbol='', string=False):
     """判断股票ID对应的证券市场匹配规则
 
-    ['50', '51', '60', '90', '110'] 为 sh
+    ['50', '51', '60', '90', '110', '900'] 为 sh
     ['00', '12'，'13', '18', '15', '16', '18', '20', '30', '39', '115'] 为 sz
-    ['5', '6', '9'] 开头的为 sh， 其余为 sz
+    ['4', '8', '920'] 为bj
 
     :param string: False 返回市场ID，否则市场缩写名称
-    :param symbol: 股票ID, 若以 'sz', 'sh' 开头直接返回对应类型，否则使用内置规则判断
-    :return 'sh' or 'sz'
+    :param symbol: 股票ID, 若以 'sz', 'sh', 'bj' 开头直接返回对应类型，否则使用内置规则判断
+    :return 'sh' 、 'sz'、 'bj'
     """
 
     assert isinstance(symbol, str), 'stock code need str type'
 
     market = 'sh'
 
-    if symbol.startswith(('sh', 'sz', 'SH', 'SZ')):
+    if symbol.startswith(('sh', 'sz', 'bj', 'SH', 'SZ', 'BJ')):
         market = symbol[:2].lower()
 
     # 优先处理上海B股(900开头)
