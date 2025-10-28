@@ -45,11 +45,15 @@ def get_stock_market(symbol='', string=False):
     if symbol.startswith(('sh', 'sz', 'SH', 'SZ')):
         market = symbol[:2].lower()
 
-    # 优先处理北交所新代码段920开头的股票
+    # 优先处理上海B股(900开头)
+    elif symbol.startswith('900'):
+        market = 'sh'
+
+    # 处理北交所新代码段(920开头)
     elif symbol.startswith('920'):
         market = 'bj'
 
-    elif symbol.startswith(('50', '51', '60', '68', '90', '110', '113', '132', '204')):
+    elif symbol.startswith(('50', '51', '60', '68', '110', '113', '132', '204')):
         market = 'sh'
 
     elif symbol.startswith(('00', '12', '13', '18', '15', '16', '18', '20', '30', '39', '115', '1318')):
@@ -59,6 +63,8 @@ def get_stock_market(symbol='', string=False):
         market = 'sh'
 
     elif symbol.startswith(('9', '4', '8')):
+        # 除了900和920开头的，其他9开头的以及4、8开头的都属于北交所
+        # 9开头的：930, 940, 950等属于北交所
         market = 'bj'
 
     # logger.debug(f"market => {market}")
