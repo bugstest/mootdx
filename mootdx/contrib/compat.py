@@ -15,44 +15,50 @@ from mootdx.logger import logger
 class MooTdxDailyBarReader(TdxDailyBarReader):
     """感谢 bopomofo 的鼎力支持"""
 
-    SECURITY_TYPE = [
-        'SH_A_STOCK',
-        'SH_B_STOCK',
-        'SH_STAR_STOCK',
-        'SH_INDEX',
-        'SH_FUND',
-        'SH_BOND',
-        'SZ_A_STOCK',
-        'SZ_B_STOCK',
-        'SZ_INDEX',
-        'SZ_FUND',
-        'SZ_BOND',
-        'BJ_A_STOCK',  # 北交所A股
-        'BJ_INDEX',    # 北交所指数
+    SECURITY_TYPE = [
+        'SH_A_STOCK',
+        'SH_B_STOCK',
+        'SH_STAR_STOCK',
+        'SH_INDEX',
+        'SH_FUND',
+        'SH_BOND',
+        'SH_Reverse_Repo',  # 上海国债逆回购
+        'SZ_A_STOCK',
+        'SZ_B_STOCK',
+        'SZ_INDEX',
+        'SZ_FUND',
+        'SZ_BOND',
+        'SZ_Reverse_Repo',  # 深圳国债逆回购
+        'BJ_A_STOCK',  # 北交所A股
+        'BJ_INDEX',    # 北交所指数
     ]
 
-    SECURITY_COEFFICIENT = {
-        'SH_A_STOCK': [0.01, 0.01],
-        'SH_B_STOCK': [0.001, 0.01],
-        'SH_STAR_STOCK': [0.01, 0.01],
-        'SH_INDEX': [0.01, 1.0],
-        'SH_FUND': [0.001, 1.0],
-        'SH_BOND': [0.001, 1.0],
-        'SZ_A_STOCK': [0.01, 0.01],
-        'SZ_B_STOCK': [0.01, 0.01],
-        'SZ_INDEX': [0.01, 1.0],
-        'SZ_FUND': [0.001, 0.01],
-        'SZ_BOND': [0.001, 0.01],
+    SECURITY_COEFFICIENT = {
+        'SH_A_STOCK': [0.01, 0.01],
+        'SH_B_STOCK': [0.001, 0.01],
+        'SH_STAR_STOCK': [0.01, 0.01],
+        'SH_INDEX': [0.01, 1.0],
+        'SH_FUND': [0.001, 1.0],
+        'SH_BOND': [0.001, 1.0],
+        'SH_Reverse_Repo': [0.0001, 10.0],  # 上海国债逆回购日线系数
+        'SZ_A_STOCK': [0.01, 0.01],
+        'SZ_B_STOCK': [0.01, 0.01],
+        'SZ_INDEX': [0.01, 1.0],
+        'SZ_FUND': [0.001, 0.01],
+        'SZ_BOND': [0.001, 0.01],
+        'SZ_Reverse_Repo': [0.0001, 1.0],  # 深圳国债逆回购日线系数
         'BJ_A_STOCK': [0.01, 0.01],  # 北交所A股系数 这个待确定啊
         
-        'BJ_BOND':[0,0],   # 债券还没有验证
-        'BJ_INDEX': [0.01, 1.0],     # 北交所指数系数 这个待确定啊
+        'BJ_BOND':[0,0],   # 债券还没有验证
+        'BJ_INDEX': [0.01, 1.0],     # 北交所指数系数 这个待确定啊
     }
 
     def get_security_type(self, fname):
 
         exchange = str(fname[-12:-10]).lower()
         code_head = fname[-10:-8]
+        # 获取完整的代码用于更精确的判断
+        code_full = fname[-10:-4] if len(fname) >= 10 else fname
 
         if exchange == SECURITY_EXCHANGE[0]:
             if code_head in ['00', '30']:
@@ -64,10 +70,13 @@ class MooTdxDailyBarReader(TdxDailyBarReader):
             if code_head in ['39']:
                 return 'SZ_INDEX'
 
-            if code_head in ['15', '16', '18']:
-                return 'SZ_FUND'
-
-            if code_head in ['10', '11', '12', '13', '14']:
+            if code_head in ['15', '16', '18']:
+                return 'SZ_FUND'
+
+            if code_head == '13':
+                # 所有13开头的证券代码都是深圳国债逆回购
+                return 'SZ_Reverse_Repo'
+            elif code_head in ['10', '11', '12', '14']:
                 return 'SZ_BOND'
 
             return 'SZ_OTHER'
@@ -85,12 +94,15 @@ class MooTdxDailyBarReader(TdxDailyBarReader):
             if code_head in ['00', '88', '99']:
                 return 'SH_INDEX'
 
-            if code_head in ['50', '51', '58']:
+            if code_head in ['50', '51', '52', '53', '55', '56', '58']:
                 return 'SH_FUND'
 
-            # if code_head in ['01', '10', '11', '12', '13', '14']:
-            if code_head in ['01', '02', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']:
+            if code_head in ['01', '02', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']:
                 return 'SH_BOND'
+            
+            # 处理上海国债逆回购(20开头)
+            if code_head == '20':
+                return 'SH_Reverse_Repo'
 
             return 'SH_OTHER'
 
