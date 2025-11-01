@@ -20,8 +20,8 @@
 
 版本更新(倒序)
 --------------
-
-原项目的版本更新日志: <https://mootdx.readthedocs.io/zh_CN/latest/history/>
+- 25.10.28 添加对北交所新股票代码 920 的支持。
+- 25.10.28 原项目的版本更新日志: <https://mootdx.readthedocs.io/zh_CN/latest/history/>
 
 运行环境
 --------
